@@ -1,4 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_check_arg.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgouveia <cgouveia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/25 14:08:27 by cgouveia          #+#    #+#             */
+/*   Updated: 2025/02/25 14:14:22 by cgouveia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosop.h"
+
+t_program	*program(void)
+{
+	static t_program	d;
+
+	return (&d);
+}
 
 void	ft_error(void)
 {	
@@ -25,8 +44,6 @@ int	ft_atoi_limit(const char *str)
 		str++;
 	while (*str)
 	{
-		if (!ft_isdigit(*str))
-			ft_error();
 		i = i * 10 + (*str - 48);
 		str++;
 	}
@@ -35,50 +52,34 @@ int	ft_atoi_limit(const char *str)
 	return (mod * i);
 }
 
-t_philo	*ft_sub_process(char **argv)
+int	check_arg_content(char *arg)
 {
-	t_philo	*a;
-	char	**tmp;
-	int		i;
-	int		j;
+	int	i;
 
-	a = NULL;
 	i = 0;
-	tmp = ft_split(argv[1], 32);
-	while (tmp[i])
+	while (arg[i] != '\0')
 	{
-		j = ft_atoi_limit(tmp[i]);
-		printf("%d\n", j);
+		if (!ft_isdigit(arg[i]))
+			return (1);
 		i++;
 	}
-	//ft_freestr(tmp);
-	//free(tmp);
-	return (a);
+	return (0);
 }
 
-t_philo	*ft_process(int argc, char **argv)
+int	check_valid_args(char **argv)
 {
-	t_philo	*a;
-	int		i;
-	int		j;
-
-	i = 1;
-	a = NULL;
-	if (argc > 1 && argc < 7)
-	{
-		if (argc == 2)
-			a = ft_sub_process(argv);
-		else
-		{
-			while (i < argc)
-			{
-				j = ft_atoi_limit(argv[i]);
-				printf("%d\n", j);
-				i++;
-			}
-		}
-	}
-	else
-		ft_error();
-	return (a);
+	if (ft_atoi_limit(argv[1]) > 200 || ft_atoi_limit(argv[1]) <= 0
+		|| check_arg_content(argv[1]) == 1)
+		return (write(2, "numero de philosophers invalido\n", 32), 1);
+	if (ft_atoi_limit(argv[2]) <= 0 || check_arg_content(argv[2]) == 1)
+		return (write(2, "time to die invalido\n", 21), 1);
+	if (ft_atoi_limit(argv[3]) <= 0 || check_arg_content(argv[3]) == 1)
+		return (write(2, "time to eat invalido\n", 21), 1);
+	if (ft_atoi_limit(argv[4]) <= 0 || check_arg_content(argv[4]) == 1)
+		return (write(2, "time to sleep invalido\n", 23), 1);
+	if (argv[5]
+		&& (ft_atoi_limit(argv[5]) < 0 || check_arg_content(argv[5]) == 1))
+		return (write(2, "numero de times que filosofos têm para comer\n",
+				45), 1);
+	return (0);
 }

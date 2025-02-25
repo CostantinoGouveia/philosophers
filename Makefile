@@ -2,12 +2,15 @@ NAME = philo
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g 
+CFLAGS = -Wall -Werror -Wextra 
 
 SRC = philosop.c \
 	ft_check_arg.c \
 	utils.c \
+	utils_1.c \
 	ft_split.c \
+	init.c \
+	life.c \
 
 all: $(NAME)
 
